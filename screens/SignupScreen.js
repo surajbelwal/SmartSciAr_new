@@ -13,22 +13,38 @@ import {
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { LinearGradient } from "expo-linear-gradient";
+import { useAuth } from "../context/AuthContext";
 
 export default function SignupScreen({ navigation }) {
+  const { signup } = useAuth();
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [studentClass, setStudentClass] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSignup = async () => {
     // Validation
-    if (!email || !password || !confirmPassword) {
+    if (!name || !email || !studentClass || !password || !confirmPassword) {
       Alert.alert("Error", "Please fill in all fields");
+      return;
+    }
+
+    if (name.trim().length < 2) {
+      Alert.alert("Error", "Please enter a valid name");
       return;
     }
 
     if (!email.includes("@")) {
       Alert.alert("Error", "Please enter a valid email");
+      return;
+    }
+
+    // Validate class (6-12)
+    const classNum = parseInt(studentClass);
+    if (isNaN(classNum) || classNum < 6 || classNum > 12) {
+      Alert.alert("Error", "Please enter a valid class (6-12)");
       return;
     }
 
@@ -44,12 +60,21 @@ export default function SignupScreen({ navigation }) {
 
     setIsLoading(true);
 
-    // TODO: Firebase authentication will be implemented here
-    setTimeout(() => {
-      setIsLoading(false);
-      // Navigate to Home screen after successful signup
-      navigation.navigate("Home");
-    }, 1000);
+    // Firebase signup
+    const result = await signup(email, password, name.trim(), studentClass);
+
+    setIsLoading(false);
+
+    if (result.success) {
+      Alert.alert("Success!", "Your account has been created successfully", [
+        {
+          text: "OK",
+          onPress: () => navigation.navigate("Home"),
+        },
+      ]);
+    } else {
+      Alert.alert("Signup Failed", result.error);
+    }
   };
 
   const handleBackToWelcome = () => {
@@ -95,6 +120,20 @@ export default function SignupScreen({ navigation }) {
             </View>
 
             <View style={styles.formContainer}>
+              {/* Name Input */}
+              <View style={styles.inputContainer}>
+                <Text style={styles.inputLabel}>Full Name</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Enter your full name"
+                  placeholderTextColor="rgba(224, 225, 221, 0.5)"
+                  value={name}
+                  onChangeText={setName}
+                  autoCapitalize="words"
+                  autoCorrect={false}
+                />
+              </View>
+
               {/* Email Input */}
               <View style={styles.inputContainer}>
                 <Text style={styles.inputLabel}>Email</Text>
@@ -106,6 +145,21 @@ export default function SignupScreen({ navigation }) {
                   onChangeText={setEmail}
                   keyboardType="email-address"
                   autoCapitalize="none"
+                  autoCorrect={false}
+                />
+              </View>
+
+              {/* Class Input */}
+              <View style={styles.inputContainer}>
+                <Text style={styles.inputLabel}>Class (6-12)</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Enter your class (e.g., 9)"
+                  placeholderTextColor="rgba(224, 225, 221, 0.5)"
+                  value={studentClass}
+                  onChangeText={setStudentClass}
+                  keyboardType="number-pad"
+                  maxLength={2}
                   autoCorrect={false}
                 />
               </View>

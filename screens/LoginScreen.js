@@ -13,8 +13,10 @@ import {
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { LinearGradient } from "expo-linear-gradient";
+import { useAuth } from "../context/AuthContext";
 
 export default function LoginScreen({ navigation }) {
+  const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -33,12 +35,17 @@ export default function LoginScreen({ navigation }) {
 
     setIsLoading(true);
 
-    // TODO: Firebase authentication will be implemented here
-    setTimeout(() => {
-      setIsLoading(false);
+    // Firebase login
+    const result = await login(email, password);
+
+    setIsLoading(false);
+
+    if (result.success) {
       // Navigate to Home screen after successful login
       navigation.navigate("Home");
-    }, 1000);
+    } else {
+      Alert.alert("Login Failed", result.error);
+    }
   };
 
   const handleBackToWelcome = () => {
