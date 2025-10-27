@@ -36,6 +36,14 @@ export default function WelcomeScreen({ navigation }) {
     navigation.navigate("Home");
   };
 
+  const handleLoginPress = () => {
+    navigation.navigate("Login");
+  };
+
+  const handleSignupPress = () => {
+    navigation.navigate("Signup");
+  };
+
   return (
     <LinearGradient
       colors={["#0D1B2A", "#1B263B", "#415A77"]}
@@ -73,19 +81,52 @@ export default function WelcomeScreen({ navigation }) {
 
         {/* Buttons Section */}
         <Animated.View style={[styles.buttonSection, { opacity: fadeAnim }]}>
+          {/* Login Button */}
           <TouchableOpacity
-            style={styles.getStartedButton}
-            onPress={handleGetStarted}
+            style={styles.loginButton}
+            onPress={handleLoginPress}
             activeOpacity={0.8}
           >
             <LinearGradient
-              colors={["#4895EF", "#4CC9F0"]}
+              colors={["#4895EF", "#4361EE"]}
               style={styles.buttonGradient}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
             >
-              <Text style={styles.getStartedButtonText}>Get Started</Text>
+              <Text style={styles.buttonText}>Login</Text>
             </LinearGradient>
+          </TouchableOpacity>
+
+          {/* Sign Up Button */}
+          <TouchableOpacity
+            style={styles.signupButton}
+            onPress={handleSignupPress}
+            activeOpacity={0.8}
+          >
+            <LinearGradient
+              colors={["#1FCFA6", "#19A485"]}
+              style={styles.buttonGradient}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+            >
+              <Text style={styles.buttonText}>Sign Up</Text>
+            </LinearGradient>
+          </TouchableOpacity>
+
+          {/* Divider */}
+          <View style={styles.dividerContainer}>
+            <View style={styles.dividerLine} />
+            <Text style={styles.dividerText}>OR</Text>
+            <View style={styles.dividerLine} />
+          </View>
+
+          {/* Continue as Guest Button */}
+          <TouchableOpacity
+            style={styles.guestButton}
+            onPress={handleGetStarted}
+            activeOpacity={0.8}
+          >
+            <Text style={styles.guestButtonText}>Continue as Guest</Text>
           </TouchableOpacity>
         </Animated.View>
       </SafeAreaView>
@@ -159,26 +200,73 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingBottom: 50,
+    width: "100%",
   },
-  getStartedButton: {
+  loginButton: {
     width: width * 0.85,
-    height: 60,
-    borderRadius: 30,
-    overflow: "hidden", // This is crucial for the LinearGradient to respect the border radius
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.4,
-    shadowRadius: 10,
-    elevation: 12,
+    height: 56,
+    borderRadius: 28,
+    overflow: "hidden",
+    shadowColor: "#4895EF",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.5,
+    shadowRadius: 8,
+    elevation: 10,
+    marginBottom: 16,
+  },
+  signupButton: {
+    width: width * 0.85,
+    height: 56,
+    borderRadius: 28,
+    overflow: "hidden",
+    shadowColor: "#1FCFA6",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.5,
+    shadowRadius: 8,
+    elevation: 10,
+    marginBottom: 20,
   },
   buttonGradient: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
   },
-  getStartedButtonText: {
+  buttonText: {
     color: "#FFFFFF",
-    fontSize: 20,
+    fontSize: 18,
+    fontWeight: "bold",
+    letterSpacing: 0.8,
+  },
+  dividerContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    width: width * 0.85,
+    marginVertical: 20,
+  },
+  dividerLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: "rgba(224, 225, 221, 0.3)",
+  },
+  dividerText: {
+    color: "#C5C7C9",
+    fontSize: 14,
+    fontWeight: "600",
+    marginHorizontal: 15,
+  },
+  guestButton: {
+    width: width * 0.85,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
+    borderWidth: 2,
+    borderColor: "rgba(224, 225, 221, 0.3)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  guestButtonText: {
+    color: "#E0E1DD",
+    fontSize: 18,
     fontWeight: "bold",
     letterSpacing: 0.8,
   },

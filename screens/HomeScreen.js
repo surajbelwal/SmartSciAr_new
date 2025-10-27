@@ -9,8 +9,10 @@ import {
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { LinearGradient } from "expo-linear-gradient";
+import { useAuth } from "../context/AuthContext";
 
 export default function HomeScreen({ navigation }) {
+  const { user, userProfile } = useAuth();
   const handlePhysicsPress = () => {
     navigation.navigate("Physics");
   };
@@ -25,6 +27,10 @@ export default function HomeScreen({ navigation }) {
 
   const handleBackToWelcome = () => {
     navigation.navigate("Welcome");
+  };
+
+  const handleProfilePress = () => {
+    navigation.navigate("Profile");
   };
 
   return (
@@ -44,6 +50,26 @@ export default function HomeScreen({ navigation }) {
           <Text style={styles.backButtonText}>←</Text>
         </TouchableOpacity>
 
+        {/* Profile Button - Only show if user is logged in */}
+        {user && (
+          <TouchableOpacity
+            style={styles.profileButton}
+            onPress={handleProfilePress}
+            activeOpacity={0.7}
+          >
+            <LinearGradient
+              colors={["#4895EF", "#4CC9F0"]}
+              style={styles.profileButtonGradient}
+            >
+              <Text style={styles.profileButtonText}>
+                {userProfile?.name
+                  ? userProfile.name.charAt(0).toUpperCase()
+                  : "U"}
+              </Text>
+            </LinearGradient>
+          </TouchableOpacity>
+        )}
+
         <ScrollView
           style={styles.scrollView}
           contentContainerStyle={styles.scrollContent}
@@ -51,7 +77,9 @@ export default function HomeScreen({ navigation }) {
         >
           <View style={styles.headerSection}>
             <Text style={styles.title}>Explore Subjects</Text>
-            <Text style={styles.subtitle}>Ready for a new kind of learning?</Text>
+            <Text style={styles.subtitle}>
+              Ready for a new kind of learning?
+            </Text>
           </View>
 
           <View style={styles.mainContent}>
@@ -74,7 +102,8 @@ export default function HomeScreen({ navigation }) {
                   <Text style={styles.cardTitle}>Physics</Text>
                 </View>
                 <Text style={styles.cardDescription}>
-                  Explore atoms, forces, and quantum mechanics with interactive AR models.
+                  Explore atoms, forces, and quantum mechanics with interactive
+                  AR models.
                 </Text>
                 <View style={[styles.cardButton, styles.physicsButton]}>
                   <Text style={styles.cardButtonText}>Start Learning</Text>
@@ -101,7 +130,8 @@ export default function HomeScreen({ navigation }) {
                   <Text style={styles.cardTitle}>Chemistry</Text>
                 </View>
                 <Text style={styles.cardDescription}>
-                  Visualize molecules, chemical bonds, and reactions in a virtual lab.
+                  Visualize molecules, chemical bonds, and reactions in a
+                  virtual lab.
                 </Text>
                 <View style={[styles.cardButton, styles.chemistryButton]}>
                   <Text style={styles.cardButtonText}>Start Learning</Text>
@@ -116,7 +146,10 @@ export default function HomeScreen({ navigation }) {
               onPress={handleBiologyPress}
             >
               <LinearGradient
-                colors={["rgba(255, 107, 107, 0.15)", "rgba(255, 26, 26, 0.78)"]}
+                colors={[
+                  "rgba(255, 107, 107, 0.15)",
+                  "rgba(255, 26, 26, 0.78)",
+                ]}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
                 style={styles.cardInner}
@@ -164,6 +197,33 @@ const styles = StyleSheet.create({
     color: "#E0E1DD",
     top: -2,
     fontSize: 24,
+    fontWeight: "bold",
+  },
+  profileButton: {
+    position: "absolute",
+    top: 60,
+    right: 20,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    overflow: "hidden",
+    zIndex: 10,
+    borderWidth: 2,
+    borderColor: "rgba(255, 255, 255, 0.3)",
+    shadowColor: "#4895EF",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  profileButtonGradient: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  profileButtonText: {
+    color: "#FFFFFF",
+    fontSize: 20,
     fontWeight: "bold",
   },
   scrollView: {
